@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode.robot.teleop;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@TeleOp(name = "Intake Position Testing", group = "Testing")
 public class GGIntakePositionTesting extends LinearOpMode {
 
     double intakeBarPos = 0.5;
