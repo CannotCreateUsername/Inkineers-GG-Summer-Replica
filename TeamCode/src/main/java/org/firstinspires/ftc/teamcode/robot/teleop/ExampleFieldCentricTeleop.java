@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.teleop;
 
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -7,6 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
+import org.firstinspires.ftc.teamcode.robot.subsystem.Intake;
+import org.firstinspires.ftc.teamcode.robot.subsystem.Outtake;
 
 /**
  * This is an example teleop that showcases movement and field-centric driving.
@@ -20,11 +24,21 @@ public class ExampleFieldCentricTeleop extends OpMode {
     private Follower follower;
     private final Pose startPose = new Pose(0,0,0);
 
+    private Intake intake;
+    private Outtake outtake;
+
+    GamepadEx gamepadEx;
+
     /** This method is call once when init is played, it initializes the follower **/
     @Override
     public void init() {
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
+
+        intake = new Intake(hardwareMap);
+        outtake = new Outtake(hardwareMap);
+
+        gamepadEx = new GamepadEx(gamepad1);
     }
 
     /** This method is called continuously after Init while waiting to be started. **/
@@ -52,10 +66,29 @@ public class ExampleFieldCentricTeleop extends OpMode {
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
         follower.update();
 
+        // Outtake Logic. A = Next State, X = In, B = Ready, Y = Out
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.A)) {
+            outtake.nextState();
+        } else if (gamepadEx.wasJustPressed(GamepadKeys.Button.X)) {
+            outtake.setState(Outtake.MasterState.OUTTAKE_IN);
+        } else if (gamepadEx.wasJustPressed(GamepadKeys.Button.B)) {
+            outtake.setState(Outtake.MasterState.OUTTAKE_READY);
+        } else if (gamepadEx.wasJustPressed(GamepadKeys.Button.Y)) {
+            outtake.setState(Outtake.MasterState.OUTTAKE_OUT);
+        }
+        outtake.runOuttakeSubsystem();
+
         /* Telemetry Outputs of our Follower */
         telemetry.addData("X", follower.getPose().getX());
         telemetry.addData("Y", follower.getPose().getY());
         telemetry.addData("Heading in Degrees", Math.toDegrees(follower.getPose().getHeading()));
+
+        /* Intake Telemetry */
+
+        /* Outtake Telemetry */
+        telemetry.addData("Outtake State", outtake.getMasterState());
+        telemetry.addData("Outtake Slide Target", outtake.getTargetSlidePosition());
+        telemetry.addData("Outtake Slide Position", outtake.getOuttakeSlidePosition());
 
         /* Update Telemetry to the Driver Hub */
         telemetry.update();
