@@ -78,14 +78,23 @@ public class ExampleFieldCentricTeleop extends OpMode {
         }
         outtake.runOuttakeSubsystem();
 
+        // Intake Logic.
+        intake.runIntakeSubsystem(gamepadEx, gamepad1);
+
         /* Telemetry Outputs of our Follower */
+        telemetry.addLine("\\PEDRO TELEMETRY//");
         telemetry.addData("X", follower.getPose().getX());
         telemetry.addData("Y", follower.getPose().getY());
         telemetry.addData("Heading in Degrees", Math.toDegrees(follower.getPose().getHeading()));
 
         /* Intake Telemetry */
+        telemetry.addLine("\\INTAKE TELEMETRY//");
+        telemetry.addData("Intake State", intake.getMasterState());
+        telemetry.addData("Intake Slide Target", intake.getTargetSlidePosition());
+        telemetry.addData("Intake Slide Position", intake.getIntakeSlidePosition());
 
         /* Outtake Telemetry */
+        telemetry.addLine("\\OUTTAKE TELEMETRY//");
         telemetry.addData("Outtake State", outtake.getMasterState());
         telemetry.addData("Outtake Slide Target", outtake.getTargetSlidePosition());
         telemetry.addData("Outtake Slide Position", outtake.getOuttakeSlidePosition());

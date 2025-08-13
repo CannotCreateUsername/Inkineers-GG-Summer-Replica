@@ -43,6 +43,7 @@ public class Outtake {
     private final ElapsedTime runtime;
     /* PID */
 
+    // TODO: Fine tune these values.
     private static final int OUTTAKE_SLIDE_OUT_POS = 1600;
     private static final int OUTTAKE_SLIDE_IN_POS = 0;
 
@@ -138,6 +139,7 @@ public class Outtake {
                 setState(MasterState.OUTTAKE_IN);
                 break;
         }
+        switchTime.reset();
     }
 
     // NOT FOR TELEOP
