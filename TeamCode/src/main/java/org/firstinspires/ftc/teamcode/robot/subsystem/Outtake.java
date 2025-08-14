@@ -50,8 +50,8 @@ public class Outtake {
     private static final double OUTTAKE_TRANSFER_POS = 0.5;
     private static final double OUTTAKE_SCORE_POS = 0.6;
 
-    private static final double CLAW_CLOSE_POS = 0.5;
-    private static final double CLAW_OPEN_POS = 0.6;
+    private static final double CLAW_CLOSE_POS = 0.0;
+    private static final double CLAW_OPEN_POS = 1.0;
 
     private final ElapsedTime switchTime;
 
@@ -70,6 +70,7 @@ public class Outtake {
         outtakeSlidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // TODO: Reverse actuators if needed
+        outtakeSlidesLeft.setDirection(DcMotor.Direction.REVERSE);
 
         masterState = MasterState.OUTTAKE_IN;
         barState = BarState.TRANSFER;
@@ -93,8 +94,10 @@ public class Outtake {
                 clawState = ClawState.CLOSE;
                 break;
             case OUTTAKE_OUT:
-                barState = BarState.SCORE;
                 setTargetSlidePos(OUTTAKE_SLIDE_OUT_POS);
+                if (switchTime.seconds() > 0.4) {
+                    barState = BarState.SCORE;
+                }
                 break;
         }
 

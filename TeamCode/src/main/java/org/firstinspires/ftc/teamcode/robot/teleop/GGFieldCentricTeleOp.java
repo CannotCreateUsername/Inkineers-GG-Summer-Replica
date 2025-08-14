@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.robot.subsystem.Outtake;
  * @version 2.0, 12/30/2024
  */
 
-@TeleOp(name = "Golden Gears", group = "Teleop")
+@TeleOp(name = "Gilded Gears", group = "Teleop")
 public class GGFieldCentricTeleOp extends OpMode {
     private Follower follower;
     private final Pose startPose = new Pose(0,0,0);

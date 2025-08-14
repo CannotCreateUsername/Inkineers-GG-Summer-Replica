@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -43,7 +44,7 @@ public class Intake {
     /* PID */
 
     // TODO: Fine tune these values.
-    private static final int INTAKE_SLIDE_OUT_POS = 1600;
+    private static final int INTAKE_SLIDE_OUT_POS = 200;
     private static final int INTAKE_SLIDE_IN_POS = 0;
     private static final int SLIDE_INCREMENT = 10;
 
@@ -64,6 +65,7 @@ public class Intake {
         intakeSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // TODO: Reverse actuators if needed
+        intakeSlides.setDirection(DcMotorSimple.Direction.REVERSE);
 
         masterState = MasterState.INTAKE_IN;
         barState = BarState.TRANSFER;
@@ -156,7 +158,8 @@ public class Intake {
     }
 
     private void setTargetSlidePos(int ticks) {
-        targetSlidePosition = ticks;
+        // Don't extend or retract too much
+        targetSlidePosition = Math.max(0, Math.min(INTAKE_SLIDE_OUT_POS, ticks));
     }
 
     private void runIntakeSlides() {
